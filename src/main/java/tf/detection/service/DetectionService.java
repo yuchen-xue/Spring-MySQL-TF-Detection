@@ -1,5 +1,6 @@
 package tf.detection.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
@@ -9,6 +10,7 @@ import org.tensorflow.framework.SignatureDef;
 import org.tensorflow.framework.TensorInfo;
 import org.tensorflow.types.UInt8;
 import tf.detection.model.DetectionModel;
+import tf.detection.repository.DetectionRepository;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -28,11 +30,15 @@ public class DetectionService {
     private final Session session;
     private final String testImagePath;
 
+    @Autowired
+    private DetectionRepository detectionRepository;
+
     public DetectionService(String[] detectionLabels, SavedModelBundle detectionModel, URL testImageURL) {
         this.detectionLabels = detectionLabels;
         this.detectionModel = detectionModel;
         this.session = detectionModel.session();
         this.testImagePath = testImageURL.getPath();
+
     }
 
     public String[] viewLabels() {
@@ -41,6 +47,17 @@ public class DetectionService {
 
     public List<String> viewSignature() throws Exception {
         return getModelSignature(detectionModel);
+    }
+
+    public void loadFakeDataIntoDB() {
+        detectionRepository.save(new DetectionModel(
+                "/Users/seansyue/WORKSPACE-Coding/SpringBootProjects/Custom/tf-mysql-detection/out/production/resources/tf_inception/test.jpg",
+                "person",
+                (float) 0.984342566432,
+                (float) 0.3406806343433,
+                (float) 0.34068063432423,
+                (float) 0.3434234,
+                (float) 0.342342352));
     }
 
     public List<String> simpleInference() throws Exception {

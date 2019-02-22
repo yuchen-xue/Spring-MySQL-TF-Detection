@@ -35,4 +35,9 @@ public class DetectionController {
     public List<DetectionModel> runSimpleInferenceWithModel() throws Exception {
         return detectionService.simpleInferenceWithModel();
     }
+
+    @GetMapping(value = "/load_fake")
+    public void runLoadFakeDataIntoDB() {
+        detectionService.loadFakeDataIntoDB();
+    }
 }

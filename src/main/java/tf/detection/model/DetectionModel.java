@@ -1,6 +1,14 @@
 package tf.detection.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "detections")
 public class DetectionModel {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Integer id;
     private String filename;
     private String label;
     private float score;
@@ -16,6 +24,70 @@ public class DetectionModel {
         this.ymin = ymin;
         this.xmin = xmin;
         this.ymax = ymax;
+        this.xmax = xmax;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
+    }
+
+    public float getYmin() {
+        return ymin;
+    }
+
+    public void setYmin(float ymin) {
+        this.ymin = ymin;
+    }
+
+    public float getXmin() {
+        return xmin;
+    }
+
+    public void setXmin(float xmin) {
+        this.xmin = xmin;
+    }
+
+    public float getYmax() {
+        return ymax;
+    }
+
+    public void setYmax(float ymax) {
+        this.ymax = ymax;
+    }
+
+    public float getXmax() {
+        return xmax;
+    }
+
+    public void setXmax(float xmax) {
         this.xmax = xmax;
     }
 }
