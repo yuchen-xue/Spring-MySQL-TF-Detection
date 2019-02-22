@@ -8,6 +8,7 @@ import org.tensorflow.framework.MetaGraphDef;
 import org.tensorflow.framework.SignatureDef;
 import org.tensorflow.framework.TensorInfo;
 import org.tensorflow.types.UInt8;
+import tf.detection.model.DetectionModel;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -67,20 +68,45 @@ public class DetectionService {
         }
     }
 
+    public List<DetectionModel> simpleInferenceWithModel() throws Exception {
+
+        List<Tensor<?>> outputs = getInferenceOutput(testImagePath, session);
+
+        try (Tensor<Float> scoresT = outputs.get(0).expect(Float.class);
+             Tensor<Float> classesT = outputs.get(1).expect(Float.class);
+             Tensor<Float> boxesT = outputs.get(2).expect(Float.class)) {
+            // All these tensors have:
+            // - 1 as the first dimension
+            // - maxObjects as the second dimension
+            // While boxesT will have 4 as the third dimension (2 sets of (x, y) coordinates).
+            // This can be verified by looking at scoresT.shape() etc.
+            int maxObjects = (int) scoresT.shape()[1];
+            float[] scores = scoresT.copyTo(new float[1][maxObjects])[0];
+            float[] classes = classesT.copyTo(new float[1][maxObjects])[0];
+            float[][] boxes = boxesT.copyTo(new float[1][maxObjects][4])[0];
+
+            List<DetectionModel> modelsList = new ArrayList<>();
+            for (int i = 0; i < scores.length; ++i) {
+                if (scores[i] < 0.5) {
+                    continue;
+                }
+                DetectionModel model = new DetectionModel(
+                        testImagePath, detectionLabels[(int) classes[i]], scores[i], boxes[i][0], boxes[i][1], boxes[i][2], boxes[i][3]);
+                modelsList.add(model);
+            }
+            return modelsList;
+        }
+    }
+
     private static List<String> parseDetectionResults(float[] classes, String[] detectionLabels, float[] scores, float[][] boxes) {
         // Collect all objects whose score is at least 0.5.
         List<String> results = new ArrayList<>();
-        boolean foundSomething = false;
         for (int i = 0; i < scores.length; ++i) {
             if (scores[i] < 0.5) {
                 continue;
             }
-            foundSomething = true;
             results.add(String.format("\tFound %-20s (score: %.4f) box: (%.4f, %.4f, %.4f, %.4f)\n",
                     detectionLabels[(int) classes[i]], scores[i], boxes[i][0], boxes[i][1], boxes[i][2], boxes[i][3]));
-        }
-        if (!foundSomething) {
-            results.add("No objects detected with a high enough score.");
         }
         return results;
     }

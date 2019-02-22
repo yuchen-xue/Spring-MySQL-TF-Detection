@@ -2,6 +2,7 @@ package tf.detection.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tf.detection.model.DetectionModel;
 import tf.detection.service.DetectionService;
 
 import java.util.List;
@@ -28,5 +29,10 @@ public class DetectionController {
     @GetMapping(value = "/simple_inference")
     public List<String> runSimpleInferece() throws Exception {
         return detectionService.simpleInference();
+    }
+
+    @GetMapping(value = "/model_inference")
+    public List<DetectionModel> runSimpleInferenceWithModel() throws Exception {
+        return detectionService.simpleInferenceWithModel();
     }
 }
