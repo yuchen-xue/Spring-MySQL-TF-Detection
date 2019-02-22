@@ -24,4 +24,9 @@ public class DetectionController {
     public List<String> viewModelSignature() throws Exception {
         return detectionService.viewSignature();
     }
+
+    @GetMapping(value = "/simple_inference")
+    public List<String> runSimpleInferece() throws Exception {
+        return detectionService.simpleInference();
+    }
 }

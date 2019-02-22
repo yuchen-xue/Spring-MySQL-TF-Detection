@@ -9,6 +9,7 @@ import org.tensorflow.SavedModelBundle;
 import tf.detection.protos.StringIntLabelMapOuterClass;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -29,6 +30,11 @@ public class DetectionApplication {
     public String[] loadDetectionLabels(@Value("${tf.labelPath}") String labelsPath) throws Exception {
         String detectionLabelPath = ClassLoader.getSystemResource(labelsPath).getPath();
         return loadLabels(detectionLabelPath);
+    }
+
+    @Bean
+    public URL getInferenceFilePath(@Value("${tf.testImagePath}") String inferenceFilePath) {
+        return ClassLoader.getSystemResource(inferenceFilePath);
     }
 
     private static String[] loadLabels(String filename) throws Exception {
