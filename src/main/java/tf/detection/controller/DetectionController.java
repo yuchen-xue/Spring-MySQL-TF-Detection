@@ -40,4 +40,9 @@ public class DetectionController {
     public void runLoadFakeDataIntoDB() {
         detectionService.loadFakeDataIntoDB();
     }
+
+    @GetMapping(value = "/db_inference")
+    public String runSimpleInferenceDB() throws Exception{
+        return detectionService.simpleInferenceDB();
+    }
 }
