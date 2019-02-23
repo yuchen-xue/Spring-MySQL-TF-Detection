@@ -1,10 +1,10 @@
-package tf.detection.model;
+package tf.detection.dao;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "detections")
-public class DetectionModel {
+public class ResultBundle {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -17,7 +17,7 @@ public class DetectionModel {
     private float ymax;
     private float xmax;
 
-    public DetectionModel(String filename, String label, float score, float ymin, float xmin, float ymax, float xmax) {
+    public ResultBundle(String filename, String label, float score, float ymin, float xmin, float ymax, float xmax) {
         this.filename = filename;
         this.label = label;
         this.score = score;

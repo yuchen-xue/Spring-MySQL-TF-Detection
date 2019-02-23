@@ -2,47 +2,59 @@ package tf.detection.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tf.detection.model.DetectionModel;
-import tf.detection.service.DetectionService;
+import tf.detection.dao.ResultBundle;
+import tf.detection.service.DBService;
+import tf.detection.service.TestService;
+import tf.detection.service.ViewService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import java.util.List;
 
 @RestController
 public class DetectionController {
 
-    private DetectionService detectionService;
+    private ViewService viewService;
+    private DBService dbService;
+    private TestService testService;
 
-    public DetectionController(DetectionService detectionService) {
-        this.detectionService = detectionService;
+    public DetectionController(ViewService viewService, DBService dbService, TestService testService) {
+        this.viewService = viewService;
+        this.dbService = dbService;
+        this.testService = testService;
     }
 
-    @GetMapping(value = "/view_labels")
+    @GetMapping(value = "/view/labels")
     public String[] viewModelLabels() {
-        return detectionService.viewLabels();
+        return viewService.viewLabels();
     }
 
-    @GetMapping(value = "/view_signature")
-    public List<String> viewModelSignature() throws Exception {
-        return detectionService.viewSignature();
+    @GetMapping(value = "/view/model_signature")
+    public void viewModelSignature(HttpServletResponse res) throws Exception {
+        PrintWriter out = res.getWriter();
+        out.println(viewService.viewSignature());
+        out.close();
     }
 
-    @GetMapping(value = "/simple_inference")
-    public List<String> runSimpleInferece() throws Exception {
-        return detectionService.simpleInference();
+    @GetMapping(value = "/test/simple_inference")
+    public void runSimpleInference(HttpServletResponse res) throws Exception {
+        PrintWriter out = res.getWriter();
+        out.println(testService.simpleInference());
+        out.close();
     }
 
-    @GetMapping(value = "/model_inference")
-    public List<DetectionModel> runSimpleInferenceWithModel() throws Exception {
-        return detectionService.simpleInferenceWithModel();
+    @GetMapping(value = "/test/dao_inference")
+    public List<ResultBundle> runSimpleInferenceWithModel() throws Exception {
+        return testService.simpleInferenceDAO();
     }
 
-    @GetMapping(value = "/load_fake")
-    public void runLoadFakeDataIntoDB() {
-        detectionService.loadFakeDataIntoDB();
+    @GetMapping(value = "/test/load_fake")
+    public String runLoadFakeDataIntoDB() {
+        return testService.loadFakeDataIntoDB();
     }
 
-    @GetMapping(value = "/db_inference")
+    @GetMapping(value = "/db/sample_inference")
     public String runSimpleInferenceDB() throws Exception{
-        return detectionService.simpleInferenceDB();
+        return dbService.simpleInferenceDB();
     }
 }
