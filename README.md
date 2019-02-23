@@ -21,7 +21,8 @@
 
 ## Instructions
 1. Brouse to `http://localhost:8080`. 
-2. Query settings: 
+2. Query settings **(try `sample-requests.http` for a quick start)**: 
+   * `/db/upload` -- Upload an image filepath and load the detection result into MySQL DB. 
    * `/db/sample_inference` -- Detect objects on sample image and load the result into MySQL DB. 
    * `/view/labels` -- View all available labels. 
    * `/view/model_signature` -- View Tensorflow model signature

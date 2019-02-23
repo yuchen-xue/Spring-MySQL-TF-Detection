@@ -1,6 +1,8 @@
 package tf.detection.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tf.detection.dao.ResultBundle;
 import tf.detection.service.DBService;
@@ -56,6 +58,11 @@ public class DetectionController {
     @GetMapping(value = "/db/sample_inference")
     public String runSimpleInferenceDB() throws Exception{
         return dbService.simpleInferenceDB();
+    }
+
+    @PostMapping(value = "/db/upload")
+    public String runUploadInferenceDB(@RequestBody String uploadedImagePath) throws Exception{
+        return dbService.uploadInferenceDB(uploadedImagePath);
     }
 
     @GetMapping(value = "/db/all")

@@ -26,12 +26,25 @@ public class DBService {
         this.detectionLabels = detectionLabels;
         this.session = detectionModel.session();
         this.testImagePath = testImageURL.getPath();
-
     }
 
     public String simpleInferenceDB() throws Exception {
+        inferenceDB(testImagePath);
+        return "Done!";
+    }
 
-        List<Tensor<?>> outputs = getInferenceTensor(testImagePath, session);
+    public String uploadInferenceDB(String uploadedImagePath) throws Exception {
+        inferenceDB(uploadedImagePath);
+        return "Done!";
+    }
+
+    public Iterable<ResultBundle> getAllResults() {
+        return detectionRepository.findAll();
+    }
+
+    private void inferenceDB(String imagePath) throws Exception {
+
+        List<Tensor<?>> outputs = getInferenceTensor(imagePath, session);
 
         try (Tensor<Float> scoresT = outputs.get(0).expect(Float.class);
              Tensor<Float> classesT = outputs.get(1).expect(Float.class);
@@ -51,7 +64,7 @@ public class DBService {
                     continue;
                 }
                 detectionRepository.save(new ResultBundle(
-                        testImagePath,
+                        imagePath,
                         detectionLabels[(int) classes[i]],
                         scores[i],
                         boxes[i][0],
@@ -59,12 +72,6 @@ public class DBService {
                         boxes[i][2],
                         boxes[i][3]));
             }
-
-            return "Done!";
         }
-    }
-
-    public Iterable<ResultBundle> getAllResults() {
-        return detectionRepository.findAll();
     }
 }
