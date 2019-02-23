@@ -33,8 +33,8 @@ public class TestService {
 
     public String loadFakeDataIntoDB() {
         detectionRepository.save(new ResultBundle(
-                "/Users/seansyue/WORKSPACE-Coding/SpringBootProjects/Custom/tf-mysql-detection/out/production/resources/tf_inception/test.jpg",
-                "person",
+                "/fake/file/name",
+                "fake_label",
                 (float) 0.984342566432,
                 (float) 0.3406806343433,
                 (float) 0.34068063432423,

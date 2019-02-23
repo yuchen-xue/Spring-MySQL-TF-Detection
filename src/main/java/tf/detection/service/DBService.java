@@ -63,4 +63,8 @@ public class DBService {
             return "Done!";
         }
     }
+
+    public Iterable<ResultBundle> getAllResults() {
+        return detectionRepository.findAll();
+    }
 }

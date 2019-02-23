@@ -57,4 +57,9 @@ public class DetectionController {
     public String runSimpleInferenceDB() throws Exception{
         return dbService.simpleInferenceDB();
     }
+
+    @GetMapping(value = "/db/all")
+    public Iterable<ResultBundle> getAllResults() {
+        return dbService.getAllResults();
+    }
 }

@@ -9,6 +9,7 @@ public class ResultBundle {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
+    @Column(name = "file_name", unique = true, nullable = false)
     private String filename;
     private String label;
     private float score;
@@ -16,6 +17,9 @@ public class ResultBundle {
     private float xmin;
     private float ymax;
     private float xmax;
+
+    public ResultBundle() {
+    }
 
     public ResultBundle(String filename, String label, float score, float ymin, float xmin, float ymax, float xmax) {
         this.filename = filename;
