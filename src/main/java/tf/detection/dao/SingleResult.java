@@ -3,14 +3,12 @@ package tf.detection.dao;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "detections")
-public class ResultBundle {
+@Table(name = "results")
+public class SingleResult {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue
     private Integer id;
-    @Column(name = "file_name", unique = true, nullable = false)
-    private String filename;
     private String label;
     private float score;
     private float ymin;
@@ -18,17 +16,21 @@ public class ResultBundle {
     private float ymax;
     private float xmax;
 
-    public ResultBundle() {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "file_index")
+    private Result result;
+
+    public SingleResult() {
     }
 
-    public ResultBundle(String filename, String label, float score, float ymin, float xmin, float ymax, float xmax) {
-        this.filename = filename;
+    public SingleResult(String label, float score, float ymin, float xmin, float ymax, float xmax, Result result) {
         this.label = label;
         this.score = score;
         this.ymin = ymin;
         this.xmin = xmin;
         this.ymax = ymax;
         this.xmax = xmax;
+        this.result = result;
     }
 
     public Integer getId() {
@@ -37,14 +39,6 @@ public class ResultBundle {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
     }
 
     public String getLabel() {
@@ -93,5 +87,13 @@ public class ResultBundle {
 
     public void setXmax(float xmax) {
         this.xmax = xmax;
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
     }
 }

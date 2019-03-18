@@ -1,7 +1,7 @@
 POST http://localhost:8080/db/upload
 Content-Type: text/plain
 
-/Users/seansyue/WORKSPACE-Coding/SpringBootProjects/Custom/tf-mysql-detection/out/production/resources/tf_inception/test.jpg
+/Users/seansyue/WORKSPACE-Coding/SpringBootProjects/Custom/tf-mysql-detection/out/production/tf.detection.main/tf_inception/test.jpg
 
 ###
 

@@ -4,7 +4,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import tf.detection.dao.ResultBundle;
+import tf.detection.dao.Result;
+import tf.detection.dao.SingleResult;
 import tf.detection.service.DBService;
 import tf.detection.service.TestService;
 import tf.detection.service.ViewService;
@@ -46,7 +47,7 @@ public class DetectionController {
     }
 
     @GetMapping(value = "/test/dao_inference")
-    public List<ResultBundle> runSimpleInferenceWithModel() throws Exception {
+    public List<SingleResult> runSimpleInferenceWithModel() throws Exception {
         return testService.simpleInferenceDAO();
     }
 
@@ -66,7 +67,7 @@ public class DetectionController {
     }
 
     @GetMapping(value = "/db/all")
-    public Iterable<ResultBundle> getAllResults() {
+    public Iterable<Result> getAllResults() {
         return dbService.getAllResults();
     }
 }

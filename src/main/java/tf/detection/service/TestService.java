@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
-import tf.detection.dao.ResultBundle;
+import tf.detection.dao.Result;
+import tf.detection.dao.SingleResult;
 import tf.detection.repository.DetectionRepository;
+import tf.detection.repository.SingleResultRepository;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,6 +25,9 @@ public class TestService {
 
     @Autowired
     private DetectionRepository detectionRepository;
+    
+    @Autowired
+    private SingleResultRepository singleResultRepository;
 
     public TestService(String[] detectionLabels, SavedModelBundle detectionModel, URL testImageURL) {
         this.detectionLabels = detectionLabels;
@@ -32,14 +37,21 @@ public class TestService {
     }
 
     public String loadFakeDataIntoDB() {
-        detectionRepository.save(new ResultBundle(
-                "/fake/file/name",
+
+        List<SingleResult> singleResultList = new ArrayList<>();
+        Result result = new Result("/fake/file/name", singleResultList);
+        detectionRepository.save(result);
+
+        SingleResult singleResult = new SingleResult(
                 "fake_label",
                 (float) 0.984342566432,
                 (float) 0.3406806343433,
                 (float) 0.34068063432423,
                 (float) 0.3434234,
-                (float) 0.342342352));
+                (float) 0.342342352,
+                result);
+        singleResultRepository.save(singleResult);
+
         return "Done!";
     }
 
@@ -77,7 +89,7 @@ public class TestService {
         }
     }
 
-    public List<ResultBundle> simpleInferenceDAO() throws Exception {
+    public List<SingleResult> simpleInferenceDAO() throws Exception {
 
         List<Tensor<?>> outputs = getInferenceTensor(testImagePath, session);
 
@@ -94,16 +106,26 @@ public class TestService {
             float[] classes = classesT.copyTo(new float[1][maxObjects])[0];
             float[][] boxes = boxesT.copyTo(new float[1][maxObjects][4])[0];
 
-            List<ResultBundle> modelsList = new ArrayList<>();
+            List<SingleResult> singleResultList = new ArrayList<>();
+            Result result = new Result(testImagePath, singleResultList);
+            detectionRepository.save(result);
+
+            List<SingleResult> resultList = new ArrayList<>();
             for (int i = 0; i < scores.length; ++i) {
                 if (scores[i] < 0.5) {
                     continue;
                 }
-                ResultBundle model = new ResultBundle(
-                        testImagePath, detectionLabels[(int) classes[i]], scores[i], boxes[i][0], boxes[i][1], boxes[i][2], boxes[i][3]);
-                modelsList.add(model);
+                SingleResult model = new SingleResult(
+                        detectionLabels[(int) classes[i]],
+                        scores[i],
+                        boxes[i][0],
+                        boxes[i][1],
+                        boxes[i][2],
+                        boxes[i][3],
+                        result);
+                resultList.add(model);
             }
-            return modelsList;
+            return resultList;
         }
     }
 }

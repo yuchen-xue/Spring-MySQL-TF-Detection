@@ -1,8 +1,8 @@
 package tf.detection.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import tf.detection.dao.ResultBundle;
+import tf.detection.dao.Result;
 
 
-public interface DetectionRepository extends CrudRepository<ResultBundle, String> {
+public interface DetectionRepository extends CrudRepository<Result, Integer> {
 }

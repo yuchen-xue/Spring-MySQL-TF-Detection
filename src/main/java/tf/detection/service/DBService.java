@@ -5,10 +5,13 @@ import org.springframework.stereotype.Service;
 import org.tensorflow.SavedModelBundle;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
-import tf.detection.dao.ResultBundle;
+import tf.detection.dao.Result;
+import tf.detection.dao.SingleResult;
 import tf.detection.repository.DetectionRepository;
+import tf.detection.repository.SingleResultRepository;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import static tf.detection.service.Common.getInferenceTensor;
@@ -21,6 +24,9 @@ public class DBService {
 
     @Autowired
     private DetectionRepository detectionRepository;
+
+    @Autowired
+    private SingleResultRepository singleResultRepository;
 
     public DBService(String[] detectionLabels, SavedModelBundle detectionModel, URL testImageURL) {
         this.detectionLabels = detectionLabels;
@@ -38,7 +44,7 @@ public class DBService {
         return "Done!";
     }
 
-    public Iterable<ResultBundle> getAllResults() {
+    public Iterable<Result> getAllResults() {
         return detectionRepository.findAll();
     }
 
@@ -59,18 +65,24 @@ public class DBService {
             float[] classes = classesT.copyTo(new float[1][maxObjects])[0];
             float[][] boxes = boxesT.copyTo(new float[1][maxObjects][4])[0];
 
+            List<SingleResult> singleResultList = new ArrayList<>();
+            Result result = new Result(imagePath, singleResultList);
+            detectionRepository.save(result);
+
             for (int i = 0; i < scores.length; ++i) {
                 if (scores[i] < 0.5) {
                     continue;
                 }
-                detectionRepository.save(new ResultBundle(
-                        imagePath,
+
+                SingleResult singleResult = new SingleResult(
                         detectionLabels[(int) classes[i]],
                         scores[i],
                         boxes[i][0],
                         boxes[i][1],
                         boxes[i][2],
-                        boxes[i][3]));
+                        boxes[i][3],
+                        result);
+                singleResultRepository.save(singleResult);
             }
         }
     }
