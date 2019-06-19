@@ -32,3 +32,4 @@ HELP.md
 !**/tf_inception/mscoco_label_map.pbtxt
 bin/*
 gradle/*
+Pipfile.lock
