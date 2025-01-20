@@ -10,7 +10,7 @@ import tf.detection.service.DBService;
 import tf.detection.service.TestService;
 import tf.detection.service.ViewService;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.util.List;
 

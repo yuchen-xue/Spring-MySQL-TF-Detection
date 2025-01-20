@@ -1,6 +1,6 @@
 package tf.detection.dao;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "results")
