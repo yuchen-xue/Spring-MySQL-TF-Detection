@@ -29,6 +29,6 @@ HELP.md
 # Project Settings
 .vscode/*
 **/tf_inception/*
-!**/tf_inception/mscoco_label_map.pbtxt
+!**/tf_inception/labels.txt
 bin/*
 gradle/*
