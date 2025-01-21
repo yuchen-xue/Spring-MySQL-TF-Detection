@@ -23,12 +23,6 @@ Cache-Control: no-cache
 
 ###
 
-GET http://localhost:8080/view/model_signature
-Accept: */*
-Cache-Control: no-cache
-
-###
-
 GET http://localhost:8080/test/simple_inference
 Accept: */*
 Cache-Control: no-cache

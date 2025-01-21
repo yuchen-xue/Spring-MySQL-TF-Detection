@@ -35,7 +35,6 @@ Basically, **three** tables will be generated:
    * `/db/upload` -- Upload an image filepath and load the detection result into MySQL DB. 
    * `/db/sample_inference` -- Detect objects on sample image and load the result into MySQL DB. 
    * `/view/labels` -- View all available labels. 
-   * `/view/model_signature` -- View Tensorflow model signature
    * `/test/load_fake` -- Load fake data into MySQL DB. Used for checking DB connection. 
    * `/test/simple_inference` -- Detect objects on sample image and show the results. Used for testing inference functionality. 
    * `/test/dao_inference` -- Detect objects on sample image and show the results. Used for testing inference functionality and DAO model robustness. 
