@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - PROJECT_NAME=detection
+        - PROJECT_VERSION=0.0.1-SNAPSHOT
+    volumes:
+      - ${dir_tf_inception}:/tf_inception:ro
+    ports:
+      - ${app_port}:${app_port}
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:${mysql_tcp_port}/${mysql_database}?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${mysql_root_password}
+      - APP_PORT=${app_port}
+    # stdin_open: true # docker run -i
+    # tty: true        # docker run -t
+  mysqldb:
+    image: mysql:latest
+    ports:
+      - ${mysql_tcp_port}:${mysql_tcp_port}
+    environment:
+      - MYSQL_DATABASE=${mysql_database}
+      - MYSQL_ROOT_PASSWORD=${mysql_root_password}
+      - MYSQL_TCP_PORT=${mysql_tcp_port}
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      retries: 10
+      interval: 3s
+      timeout: 30s
