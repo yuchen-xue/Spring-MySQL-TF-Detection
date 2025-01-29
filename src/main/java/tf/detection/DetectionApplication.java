@@ -1,48 +1,53 @@
 package tf.detection;
 
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.ApplicationContext;
+
+import org.tensorflow.Graph;
 import org.tensorflow.SavedModelBundle;
+import org.tensorflow.op.Ops;
+
+import tf.detection.detection.DetectionResultParser;
 
 @SpringBootApplication
 public class DetectionApplication {
+
+    @Autowired
+    private ApplicationContext context;
 
     public static void main(String[] args) {
         SpringApplication.run(DetectionApplication.class, args);
     }
 
-    @Bean
-    public SavedModelBundle loadDetectionModel(@Value("${tf.modelPath}") String tfModelPath) throws IOException {
-        String detectionModelPath = ClassLoader.getSystemResource(tfModelPath).getPath();
-        return SavedModelBundle.load(detectionModelPath, "serve");
-    }
+	@Bean(name = "model")
+	SavedModelBundle loadDetectionModel() {
+		// get path to model folder
+		String modelPath = ClassLoader.getSystemResource("tf_inception/ssd_mobilenet_v2_fpnlite_320x320-saved_model").getPath();
+		// load saved model
+		return SavedModelBundle.load(modelPath, "serve");
+	}
 
-    @Bean
-    public String[] loadDetectionLabels(@Value("${tf.labelPath}") String labelsPath) throws Exception {
-        String detectionLabelPath = ClassLoader.getSystemResource(labelsPath).getPath();
-        return loadLabels(detectionLabelPath);
-    }
+	// Initialize a TF computational graph.
+	@Bean(name = "graph")
+	Graph getGraph() {
+		return new Graph();
+	}
+	
+	// Initialize a TF computational API.
+	@Bean(name = "tf")
+	Ops getOps() {
+		return Ops.create(context.getBean("graph", Graph.class));
+	}
 
-    @Bean
-    public URL getInferenceFilePath(@Value("${tf.testImagePath}") String inferenceFilePath) {
-        return ClassLoader.getSystemResource(inferenceFilePath);
-    }
-
-    private static String[] loadLabels(String filename) throws Exception {
-        Path filePath = Paths.get(filename);
-        List<String> lines = Files.lines(filePath).collect(Collectors.toList());
-        String[] ret = lines.toArray(new String[0]);
-        return ret;
-    }
+	// Initialize a parser for parsing the detection results.
+	@Bean(name = "parser")
+	DetectionResultParser getParser() throws IOException {
+		return new DetectionResultParser("tf_inception/coco-labels-2017.txt");
+	}
 
 }

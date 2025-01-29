@@ -19,10 +19,15 @@ repositories {
     mavenCentral()
 }
 
+def tfVersion = '1.0.0-rc.2'
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.tensorflow:tensorflow:1.15.0'
+    implementation group: 'org.tensorflow', name: 'tensorflow-core-platform', version: tfVersion
+    implementation group: 'org.tensorflow', name: 'tensorflow-framework', version: tfVersion
+    implementation group: 'com.google.guava', name: 'guava', version: '33.4.0-jre'
+    // Protobuf library is necessary for loading the detection model.
+    implementation group: 'com.google.protobuf', name: 'protobuf-java', version: '4.29.3'
     runtimeOnly 'com.mysql:mysql-connector-j'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
