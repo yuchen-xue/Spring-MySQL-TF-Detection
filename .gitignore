@@ -28,7 +28,7 @@ HELP.md
 
 # Project Settings
 .vscode/*
-**/tf_inception/*
-!**/tf_inception/labels.txt
+tf_detection/*
+!tf_detection/coco-labels-2017.txt
 bin/*
 gradle/*
