@@ -1,4 +1,4 @@
-package tf.detection.service;
+package tf.detection.detection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -11,9 +11,7 @@ import org.tensorflow.op.Ops;
 import com.google.common.collect.Table;
 
 import tf.detection.dao.DetectedObject;
-import tf.detection.detection.DetectionBackend;
 import tf.detection.repository.DetectedObjectRepository;
-import tf.detection.detection.DetectionResultParser;
 
 @Service
 public class DetectionService {
@@ -26,19 +24,17 @@ public class DetectionService {
 
     public DetectionService() {}
 
-    public String uploadInferenceDB(String uploadedImagePath) throws Exception {
-		// Perform obejct detection on the the uploaded image
+    public void inference(String uploadedImagePath, String resultImagePath) {
+		// Perform obejct detection on the the uploaded image and collect the result
 		Table<Integer, String, Float> resultTable = DetectionBackend.runDetectionTask(
 			context.getBean("model", SavedModelBundle.class), 
 			context.getBean("graph", Graph.class), 
 			context.getBean("tf", Ops.class), 
 			uploadedImagePath, 
-			"result.jpg");
+			resultImagePath);
 
 		// Create a parser for parsing the detection results
 		DetectionResultParser parser = context.getBean("parser", DetectionResultParser.class);
-	
-		// Initialize the parser with the table
 		parser.load(resultTable);
 
 		// Iterate the row mapping print the data of each row
@@ -53,7 +49,6 @@ public class DetectionService {
 			);
 			detectedObjectRepository.save(detectedObject);
 		}
-        return "Done!";
     }
 
     public Iterable<DetectedObject> getAllResults() {
