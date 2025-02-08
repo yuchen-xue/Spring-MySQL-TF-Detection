@@ -3,6 +3,7 @@ package tf.detection;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,10 +39,7 @@ public class DetectionApplication {
 	}
 
 	@Bean(name = "model")
-	SavedModelBundle loadDetectionModel() {
-		// get path to model folder
-		String modelPath = ClassLoader.getSystemResource("tf_inception/ssd_mobilenet_v2_fpnlite_320x320-saved_model").getPath();
-		// load saved model
+	SavedModelBundle loadDetectionModel(@Value("${detection.model}") String modelPath) {
 		return SavedModelBundle.load(modelPath, "serve");
 	}
 
@@ -59,8 +57,8 @@ public class DetectionApplication {
 
 	// Initialize a parser for parsing the detection results.
 	@Bean(name = "parser")
-	DetectionResultParser getParser() throws IOException {
-		return new DetectionResultParser("tf_inception/coco-labels-2017.txt");
+	DetectionResultParser getParser(@Value("${detection.label}") String labelFile) throws IOException {
+		return new DetectionResultParser(labelFile);
 	}
 
 }

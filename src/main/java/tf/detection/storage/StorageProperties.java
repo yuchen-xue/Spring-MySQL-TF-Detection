@@ -1,5 +1,6 @@
 package tf.detection.storage;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties("storage")
@@ -8,8 +9,11 @@ public class StorageProperties {
 	/**
 	 * Folder uploadDirectory for storing files
 	 */
-	private String uploadDirectory = "upload-dir";
-	private String resultDirectory = "result-dir";
+	@Value("${storage.upload-directory}")
+	private String uploadDirectory;
+
+	@Value("${storage.result-directory}")
+	private String resultDirectory;
 
 	public String getUploadDirectory() {
 		return uploadDirectory;

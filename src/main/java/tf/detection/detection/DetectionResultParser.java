@@ -25,7 +25,7 @@ public final class DetectionResultParser {
          * Load COCO dataset labels from an extertal text file.
          */
         try {
-            String strFilePath = ClassLoader.getSystemResource(labelFile).getPath();
+            String strFilePath = labelFile;
             Path filePath = Paths.get(strFilePath);
             List<String> lines = Files.lines(filePath).collect(Collectors.toList());
             this.labelArray = lines.toArray(new String[0]);
