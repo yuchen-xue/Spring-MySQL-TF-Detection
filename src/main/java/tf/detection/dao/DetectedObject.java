@@ -1,10 +1,13 @@
 package tf.detection.dao;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 @Entity
-@Table(name = "results")
-public class SingleResult {
+@Table(name = "detection_results")
+public class DetectedObject {
 
     @Id
     @GeneratedValue
@@ -16,21 +19,16 @@ public class SingleResult {
     private float ymax;
     private float xmax;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "file_index")
-    private Result result;
-
-    public SingleResult() {
+    public DetectedObject() {
     }
 
-    public SingleResult(String label, float score, float ymin, float xmin, float ymax, float xmax, Result result) {
+    public DetectedObject(String label, float score, float ymin, float xmin, float ymax, float xmax) {
         this.label = label;
         this.score = score;
         this.ymin = ymin;
         this.xmin = xmin;
         this.ymax = ymax;
         this.xmax = xmax;
-        this.result = result;
     }
 
     public Integer getId() {
@@ -87,13 +85,5 @@ public class SingleResult {
 
     public void setXmax(float xmax) {
         this.xmax = xmax;
-    }
-
-    public Result getResult() {
-        return result;
-    }
-
-    public void setResult(Result result) {
-        this.result = result;
     }
 }
