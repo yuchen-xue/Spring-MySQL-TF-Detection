@@ -62,7 +62,7 @@ public class DetectionController {
 	public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
 		storageService.store(file);
-		redirectAttributes.addFlashAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
+		redirectAttributes.addFlashAttribute("message", "The detection result of " + file.getOriginalFilename() + " is ready to download!");
         
         // Inference the uploaded image and save the result
         String uploadImg = storageService.getLatestUploadFile().toString();
