@@ -8,6 +8,14 @@ This application is a simple example of deploying an object detection model. The
 2. Inference client-uploaded images and generate corresponding new images with bounding boxes
 3. Store and show the information about detected objects in the database
 
+Here's an example workflow:
+
+![Demo workflow](asset/demo.gif "Demo workflow")
+
+And here's the result image with bounding boxes: 
+
+![Result image](asset/result.jpg "Result image")
+
 ## Prerequisite
 1. Java version 21 or higher (with JDK installed)
 2. Gradle version 8.12 or higher
