@@ -56,7 +56,7 @@ And here's the result image with bounding boxes:
 ### Basic usage
 
 1. Open your browser and navigate to `http://<your_host_name>:8080` (`http://localhost:8080` when you run this application on your own machine)
-2. Click the button "Choose File" to choose your desired image (e.g. `asset/image.jpg`)
+2. Click the button "Choose File" to choose your desired image (e.g. `asset/image.jpg`[^1])
 3. Click the button "Upload"
 4. Wait until the website finish loading
 5. Download a result image by clicking the link with its filename.
@@ -75,3 +75,5 @@ And here's the result image with bounding boxes:
 * All the information of detected objects is stored in the database. The database is renewed every time you launch this application. You can change this behavior by modifying the `spring.jpa.hibernate.ddl-auto` option in the `src/main/resources/application.properties` file.
 
 * The default size limitation of images is 2 MB. You can change this behavior by modifying the `spring.servlet.multipart.max-file-size` option and the `spring.servlet.multipart.max-request-size` option in the `src/main/resources/application.properties` file.
+
+[^1]: [Image source](https://pixnio.com/free-images/people/mother-father-and-children-washing-dog-labrador-retriever-outside-in-the-fresh-air-725x483.jpg)
