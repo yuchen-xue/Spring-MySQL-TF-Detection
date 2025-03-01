@@ -34,15 +34,15 @@ And here's the result image with bounding boxes:
    $ mkdir -p ${DEST}
 
    # Only extract necessary files
-   $ curl -L ${MODEL_URL} | tar -xzv -C ${DEST} ${TAR_PARENT}/variables ${TAR_PARENT}/saved_model.pb
+   $ curl -L ${MODEL_URL} | tar -xzv --strip-components=2 -C ${DEST} ${TAR_PARENT}/variables ${TAR_PARENT}/saved_model.pb
     ```
 
 2. Launch a local MySQL server, create a database and an authorized user in the MySQL shell
 
    ```bash
-   mysql> create database tf_detection; -- Create the new database
-   mysql> create user 'springuser'@'%' identified by 'ThePassword'; -- Creates the user
-   mysql> grant all on tf_detection.* to 'springuser'@'%'; -- Gives all the privileges to the new user on the newly created database 
+   mysql> CREATE DATABASE tf_detection; -- Create the new database
+   mysql> CREATE USER 'springuser'@'%' IDENTIFIED BY 'ThePassword'; -- Creates the user
+   mysql> GRANT ALL ON tf_detection.* TO 'springuser'@'%'; -- Gives all the privileges to the new user on the newly created database 
    ```
 
 3. If your MySQL server doesn't run on the default port (i.e. 3306), or you want to connect to a remote MySQL server, modify the `spring.datasource.url` option in the `src/main/resources/application.properties` file.
